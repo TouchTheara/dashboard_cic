@@ -10,9 +10,10 @@ import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:go_router/go_router.dart';
+// import 'package:go_router/go_router.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
+import 'router/router.dart';
 
 final c = NumberFormat("#,##0.00", "en_US");
 final ut = NumberFormat("#,##0", "en_US");
@@ -20,19 +21,6 @@ void main() {
   runApp(const MyApp());
   //testing git
 }
-
-final GoRouter _router = GoRouter(
-  routes: <RouteBase>[
-    GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) {
-        return const DashboardScreen(
-          title: "Dashboard",
-        );
-      },
-    ),
-  ],
-);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -42,7 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       key: NavigationService.navigatorKey,
-      routerConfig: _router,
+      routerConfig: router,
       builder: (context, child) => ResponsiveWrapper.builder(child,
           defaultScale: true,
           breakpoints: [
