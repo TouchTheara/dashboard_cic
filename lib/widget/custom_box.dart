@@ -7,10 +7,12 @@ class CustomBox extends StatelessWidget {
     this.iconData,
     this.title,
     this.subTitle,
+    this.isImage = false,
   }) : super(key: key);
   final IconData? iconData;
   final String? title;
   final String? subTitle;
+  final bool isImage;
 
   @override
   Widget build(BuildContext context) {
