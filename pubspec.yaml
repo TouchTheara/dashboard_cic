@@ -54,6 +54,8 @@ dev_dependencies:
   go_router: ^5.2.3
   get:
   syncfusion_flutter_charts: ^20.3.60
+  confetti: ^0.7.0
+  ripple_wave: ^0.0.2
   wave: ^0.2.2
 
 # For information on the generic Dart part of this file, see the

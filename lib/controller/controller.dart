@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-
+import 'package:confetti/confetti.dart';
 import 'package:dashboard_cic/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,9 +11,10 @@ class MyController extends GetxController {
     ChartData("Sale2", 5000),
     ChartData("Sale3", 20000),
   ].obs;
-  final percentList = <double>[1 - 0.1, 1 - 0.1].obs;
+  final percentList = <double>[1 - 0.1, 1 - 0.1, 1 - 0.1, 1 - 0.1].obs;
+  final spendPercent = (1 - 0.1).obs;
   final percentage = 0.0.obs;
-  final uTAmount = 100.obs;
+  final uTAmount = 1000000.obs;
   final totalAmount = 0.00.obs;
   final inputAmount = 0.obs;
   final pricePerUT = 100.00.obs;
@@ -51,8 +52,33 @@ class MyController extends GetxController {
     return count;
   });
   Random random = Random();
+  late ConfettiController controllerCenter;
+  late ConfettiController controllerCenterRight;
+  late ConfettiController controllerCenterLeft;
+  late ConfettiController controllerTopCenter;
+  late ConfettiController controllerBottomCenter;
+  @override
+  void dispose() {
+    controllerCenter.dispose();
+    controllerCenterRight.dispose();
+    controllerCenterLeft.dispose();
+    controllerTopCenter.dispose();
+    controllerBottomCenter.dispose();
+    super.dispose();
+  }
+
   @override
   void onInit() {
+    controllerCenter =
+        ConfettiController(duration: const Duration(seconds: 10));
+    controllerCenterRight =
+        ConfettiController(duration: const Duration(seconds: 10));
+    controllerCenterLeft =
+        ConfettiController(duration: const Duration(seconds: 10));
+    controllerTopCenter =
+        ConfettiController(duration: const Duration(seconds: 10));
+    controllerBottomCenter =
+        ConfettiController(duration: const Duration(seconds: 10));
     sub = myStream.listen((event) {
       debugPrint("EVENT: $event");
       if (uTAmount.value > 1) {
@@ -66,44 +92,68 @@ class MyController extends GetxController {
       debugPrint(
           'inputAmount.value=${inputAmount.value}     ,${uTAmount.value}');
       if (inputAmount.value > 0) {
-        // if (event == 0) {
-        //   event=event+3;
-        // }else{
-        //   event
-        // }
-
         i.value++;
         debugPrint('i.value=${i.value}');
-        // percentage.value = (inputAmount.value * 100) / 100;
-        // debugPrint(" percentage.value=${percentage.value}");
+
         uTAmount.value = (uTAmount.value - inputAmount.value);
 
-        var leftPercentage = uTAmount.value / 100;
+        var leftPercentage = uTAmount.value / 1000000;
+
         debugPrint(
             'leftPercentage=$leftPercentage===spendPercent====${100 - (leftPercentage * 100)}');
+        percentage.value = 100 - (leftPercentage * 100);
+        // for (var i = percentList.value[0]; i > ;i=i-0.1) {
 
-        // chartDataList
-        //     .add(ChartData("Sale${i.value.toString()}", inputAmount.value));
-        percentList.value = [];
-        // if (leftPercentage != 0) {
-        percentList.value = [leftPercentage - 0.1, leftPercentage - 0.1];
-        // } else {
-        //   percentList.value = [-0.1, -0.1];
         // }
+
+        awaitFuc(percentList.value[0], leftPercentage);
+
+        // }
+
+        if (percentage.value == 100) {
+          controllerCenter.play();
+          controllerCenterRight.play();
+          controllerBottomCenter.play();
+          controllerCenterLeft.play();
+          controllerTopCenter.play();
+        }
 
         totalAmount.value = totalAmount.value + (inputAmount.value * 2);
         update();
-      } else {
-        // showDialog(
-        //   context: NavigationService.navigatorKey.currentContext!,
-        //   builder: (context) => const AlertDialog(
-        //     title: Text("Warning"),
-        //     content: Text("No more UT left for your input"),
-        //   ),
-        // );
-        debugPrint('"No more UT left for your input"');
       }
     });
+
     super.onInit();
+  }
+
+  double getNumber(double input, {int precision = 2}) {
+    var num = 0.00;
+    try {
+      num = double.parse(
+          '$input'.substring(0, '$input'.indexOf('.') + precision + 1));
+    } catch (e) {
+      debugPrint('e=====$e');
+      num = 0.00;
+    }
+    return num;
+  }
+
+  awaitFuc(double currentPercentage, double leftPercentage) async {
+    for (var i = currentPercentage;
+        i > leftPercentage - 0.1;
+        i = i - (leftPercentage / 10)) {
+      await Future.delayed(
+        const Duration(milliseconds: 15),
+        () {},
+      );
+      percentList.value = [
+        (i + (leftPercentage / 5)),
+        (i + (leftPercentage / 10)),
+        (i + (leftPercentage / 10)),
+        (i + (leftPercentage / 10))
+      ];
+      update();
+      debugPrint("i=$i");
+    }
   }
 }
