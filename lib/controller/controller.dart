@@ -1,11 +1,44 @@
 import 'dart:async';
 import 'dart:math';
+// import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:confetti/confetti.dart';
 import 'package:dashboard_cic/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../screen/desktop_tablet.dart';
+
 class MyController extends GetxController {
+  AssetsAudioPlayer? assetsAudioPlayer;
+  final Audio _audio = Audio.file('assets/audio/congratSound.mp3');
+  void initPlayer() async {
+    try {
+      assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+      await assetsAudioPlayer?.open(
+        _audio,
+        autoStart: true,
+        forceOpen: true,
+        showNotification: true,
+      );
+    } catch (_) {
+      debugPrint('Initial Error => $_');
+    }
+  }
+
+  void playAudio() {
+    try {
+      assetsAudioPlayer?.play();
+    } catch (_) {
+      debugPrint('Play Error => $_');
+    }
+    if (percentage.value == 100) {
+      assetsAudioPlayer!.setVolume(2);
+      assetsAudioPlayer!.play();
+    }
+  }
+
   final chartDataList = <ChartData>[
     ChartData("Sale1", 0),
     ChartData("Sale2", 5000),
@@ -14,7 +47,7 @@ class MyController extends GetxController {
   final percentList = <double>[1 - 0.1, 1 - 0.1, 1 - 0.1, 1 - 0.1].obs;
   final spendPercent = (1 - 0.1).obs;
   final percentage = 0.0.obs;
-  final uTAmount = 1000000.obs;
+  final uTAmount = 5.obs;
   final totalAmount = 0.00.obs;
   final inputAmount = 0.obs;
   final pricePerUT = 100.00.obs;
@@ -57,18 +90,10 @@ class MyController extends GetxController {
   late ConfettiController controllerCenterLeft;
   late ConfettiController controllerTopCenter;
   late ConfettiController controllerBottomCenter;
-  @override
-  void dispose() {
-    controllerCenter.dispose();
-    controllerCenterRight.dispose();
-    controllerCenterLeft.dispose();
-    controllerTopCenter.dispose();
-    controllerBottomCenter.dispose();
-    super.dispose();
-  }
 
   @override
   void onInit() {
+    // initPlayer();
     controllerCenter =
         ConfettiController(duration: const Duration(seconds: 10));
     controllerCenterRight =
@@ -79,7 +104,9 @@ class MyController extends GetxController {
         ConfettiController(duration: const Duration(seconds: 10));
     controllerBottomCenter =
         ConfettiController(duration: const Duration(seconds: 10));
-    sub = myStream.listen((event) {
+
+    sub = myStream.listen((event) async {
+      // openPlayer();
       debugPrint("EVENT: $event");
       if (uTAmount.value > 1) {
         inputAmount.value = random.nextInt(uTAmount.value - 1) + 1;
@@ -91,32 +118,26 @@ class MyController extends GetxController {
 
       debugPrint(
           'inputAmount.value=${inputAmount.value}     ,${uTAmount.value}');
+
       if (inputAmount.value > 0) {
         i.value++;
         debugPrint('i.value=${i.value}');
 
         uTAmount.value = (uTAmount.value - inputAmount.value);
 
-        var leftPercentage = uTAmount.value / 1000000;
+        var leftPercentage = uTAmount.value / 5;
 
         debugPrint(
             'leftPercentage=$leftPercentage===spendPercent====${100 - (leftPercentage * 100)}');
         percentage.value = 100 - (leftPercentage * 100);
-        // for (var i = percentList.value[0]; i > ;i=i-0.1) {
 
-        // }
-
-        awaitFuc(percentList.value[0], leftPercentage);
-
-        // }
+        awaitFuc(percentList[0], leftPercentage);
 
         if (percentage.value == 100) {
           controllerCenter.play();
-          controllerCenterRight.play();
-          controllerBottomCenter.play();
-          controllerCenterLeft.play();
-          controllerTopCenter.play();
+          playAudio();
         }
+        debugPrint('E#################${percentage.value}');
 
         totalAmount.value = totalAmount.value + (inputAmount.value * 2);
         update();
@@ -124,6 +145,18 @@ class MyController extends GetxController {
     });
 
     super.onInit();
+  }
+
+  @override
+  void dispose() {
+    controllerCenter.dispose();
+    controllerCenterRight.dispose();
+    controllerCenterLeft.dispose();
+    controllerTopCenter.dispose();
+    controllerBottomCenter.dispose();
+    // assetsAudioPlayer.value.dispose();
+
+    super.dispose();
   }
 
   double getNumber(double input, {int precision = 2}) {
@@ -139,21 +172,23 @@ class MyController extends GetxController {
   }
 
   awaitFuc(double currentPercentage, double leftPercentage) async {
-    for (var i = currentPercentage;
-        i > leftPercentage - 0.1;
-        i = i - (leftPercentage / 10)) {
-      await Future.delayed(
-        const Duration(milliseconds: 15),
-        () {},
-      );
-      percentList.value = [
-        (i + (leftPercentage / 5)),
-        (i + (leftPercentage / 10)),
-        (i + (leftPercentage / 10)),
-        (i + (leftPercentage / 10))
-      ];
-      update();
-      debugPrint("i=$i");
+    if (uTAmount.value > 0) {
+      for (var i = currentPercentage;
+          i > leftPercentage - 0.1;
+          i = i - (leftPercentage / 10)) {
+        await Future.delayed(
+          const Duration(milliseconds: 15),
+          () {},
+        );
+        percentList.value = [
+          (i + (leftPercentage / 5)),
+          (i + (leftPercentage / 10)),
+          (i + (leftPercentage / 10)),
+          (i + (leftPercentage / 10))
+        ];
+        update();
+        debugPrint("i=$i");
+      }
     }
   }
 }

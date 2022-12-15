@@ -1,9 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../main.dart';
-
-// import '../screen/dashboard.dart';
+import '../screen/dashboard.dart';
 
 final router = GoRouter(
   routes: <RouteBase>[

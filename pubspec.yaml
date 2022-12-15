@@ -39,6 +39,10 @@ dependencies:
   intl: ^0.17.0
   get: ^4.6.5
   syncfusion_flutter_charts: ^20.3.60
+  # just_audio: ^0.9.30
+  # audioplayers: ^1.1.1
+  assets_audio_player: ^3.0.5
+  flutter_neumorphic: ^3.2.0
 
 dev_dependencies:
   flutter_test:
@@ -52,7 +56,6 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   responsive_framework: ^0.2.0
   go_router: ^5.2.3
-  get:
   syncfusion_flutter_charts: ^20.3.60
   confetti: ^0.7.0
   ripple_wave: ^0.0.2
@@ -63,15 +66,16 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
+  assets:
+    - assets/audio/
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
