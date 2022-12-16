@@ -11,6 +11,7 @@ void main() {
   AssetsAudioPlayer.setupNotificationsOpenAction((notification) {
     return true;
   });
+
   runApp(
     const MyApp(),
   );
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       key: NavigationService.navigatorKey,
+      debugShowCheckedModeBanner: false,
       routerConfig: router,
       builder: (context, child) => ResponsiveWrapper.builder(child,
           defaultScale: true,

@@ -1,14 +1,11 @@
 import 'dart:async';
 import 'dart:math';
-// import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
-// import 'package:audioplayers/audioplayers.dart';
 import 'package:confetti/confetti.dart';
-import 'package:dashboard_cic/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../screen/desktop_tablet.dart';
+import '../screen/desktop_tablet/desktop_tablet.dart';
 
 class MyController extends GetxController {
   AssetsAudioPlayer? assetsAudioPlayer;
@@ -56,9 +53,6 @@ class MyController extends GetxController {
     try {
       if (uTAmount.value >= inputAmount.value) {
         uTAmount.value = (uTAmount.value - inputAmount.value);
-
-        // chartDataList.add(ChartData("Sale$i", inputAmount.value));
-
         totalAmount.value =
             totalAmount.value + (inputAmount.value * pricePerUT.value);
         i.value++;
@@ -79,11 +73,13 @@ class MyController extends GetxController {
 
   late StreamSubscription sub;
   final Stream myStream = Stream.periodic(
-      const Duration(
-        seconds: 4,
-      ), (int count) {
-    return count;
-  });
+    const Duration(
+      seconds: 4,
+    ),
+    (int count) {
+      return count;
+    },
+  );
   Random random = Random();
   late ConfettiController controllerCenter;
   late ConfettiController controllerCenterRight;
@@ -172,23 +168,23 @@ class MyController extends GetxController {
   }
 
   awaitFuc(double currentPercentage, double leftPercentage) async {
-    if (uTAmount.value > 0) {
-      for (var i = currentPercentage;
-          i > leftPercentage - 0.1;
-          i = i - (leftPercentage / 10)) {
-        await Future.delayed(
-          const Duration(milliseconds: 15),
-          () {},
-        );
-        percentList.value = [
-          (i + (leftPercentage / 5)),
-          (i + (leftPercentage / 10)),
-          (i + (leftPercentage / 10)),
-          (i + (leftPercentage / 10))
-        ];
-        update();
-        debugPrint("i=$i");
-      }
+    // if (uTAmount.value > 0) {
+    for (var i = currentPercentage;
+        i > leftPercentage - 0.1;
+        i = i - (leftPercentage / 10)) {
+      await Future.delayed(
+        const Duration(milliseconds: 15),
+        () {},
+      );
+      percentList.value = [
+        (i + (leftPercentage / 5)),
+        (i + (leftPercentage / 10)),
+        (i + (leftPercentage / 10)),
+        (i + (leftPercentage / 10))
+      ];
+      update();
+      debugPrint("i=$i");
     }
   }
+  // }
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controller/controller.dart';
-import 'desktop_tablet.dart';
-import 'mobile.dart';
+import 'desktop_tablet/desktop_tablet.dart';
+import 'mobile/mobile.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key, required this.title});
@@ -17,16 +17,6 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen>
     with WidgetsBindingObserver {
   final controller = Get.put(MyController());
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addObserver(this);
-    controller.initPlayer();
-
-    // TODO: implement initState
-    super.initState();
-  }
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
